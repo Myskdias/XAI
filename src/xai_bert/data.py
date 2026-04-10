@@ -1,5 +1,5 @@
 import importlib
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 import random
 
 def load_sst2_text_splits(
@@ -89,3 +89,44 @@ def context_words_for_text(data_texts: List[str], n_word: int = 1000, n_sentence
         return random.sample(list(filtered_words.keys()), min(n_word, len(filtered_words)))
     else: # select by frequency
         return sorted(filtered_words.keys(), key=lambda x: filtered_words[x], reverse=True)[:n_word]
+
+
+def load_wic_splits(
+    max_train: Optional[int] = None,
+    max_val: Optional[int] = None,
+    max_test: Optional[int] = None,
+    seed: int = 42,
+) -> Tuple[List[Dict[str, object]], List[Dict[str, object]], List[Dict[str, object]]]:
+    """Load SuperGLUE/WiC and return train/val/test example dicts."""
+    try:
+        datasets_module = importlib.import_module("datasets")
+        load_dataset = getattr(datasets_module, "load_dataset")
+    except (ImportError, AttributeError) as exc:
+        raise ImportError("The 'datasets' package is required. Install with: pip install datasets") from exc
+
+    ds = load_dataset("super_glue", "wic")
+
+    def _pick(split_name: str, n: Optional[int]):
+        split = ds[split_name].shuffle(seed=seed)
+        return split if n is None else split.select(range(min(n, len(split))))
+
+    def _rows_to_examples(rows):
+        out = []
+        for row in rows:
+            label = row.get("label", None)
+            if label == -1:
+                label = None
+            out.append(
+                {
+                    "word": row["word"],
+                    "sentence1": row["sentence1"],
+                    "sentence2": row["sentence2"],
+                    "label": label,
+                }
+            )
+        return out
+
+    train_rows = _pick("train", max_train)
+    val_rows = _pick("validation", max_val)
+    test_rows = _pick("test", max_test)
+    return _rows_to_examples(train_rows), _rows_to_examples(val_rows), _rows_to_examples(test_rows)

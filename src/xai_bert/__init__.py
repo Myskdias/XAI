@@ -13,6 +13,7 @@ from .clipping import (
 )
 from .data import (
     load_sst2_text_splits,
+    load_wic_splits,
     context_words_for_text,
 )
 from .embeddings import (
@@ -51,6 +52,14 @@ from .types import BertBatchOutput, FlattenedLayerData, PositionProbeDatasetTens
 from .self_similarity import (
     compute_word_self_similarity_selected_layers,
 )
+from .token_outlier import (
+    detect_token_outlier_responsibility,
+    print_token_outlier_summary,
+)
+from .word_sense import (
+    contextual_word_vector,
+    evaluate_wic_with_threshold,
+)
 
 __all__ = [
     "BertBatchOutput",
@@ -73,6 +82,7 @@ __all__ = [
     "compare_outlier_stats_before_after_clipping",
     "print_before_after_comparison",
     "load_sst2_text_splits",
+    "load_wic_splits",
     "context_words_for_text",
     "mean_random_pairwise_cosine",
     "anisotropy_before_after_clipping",
@@ -94,4 +104,8 @@ __all__ = [
     "run_probe_for_selected_layers",
     "run_probe_for_selected_layers_with_splits",
     "compute_word_self_similarity_selected_layers",
+    "detect_token_outlier_responsibility",
+    "print_token_outlier_summary",
+    "contextual_word_vector",
+    "evaluate_wic_with_threshold",
 ]
