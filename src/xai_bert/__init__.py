@@ -14,6 +14,7 @@ from .clipping import (
 from .data import (
     load_sst2_text_splits,
     load_wic_splits,
+    load_wikitext_103_texts,
     context_words_for_text,
 )
 from .embeddings import (
@@ -60,6 +61,11 @@ from .word_sense import (
     contextual_word_vector,
     evaluate_wic_with_threshold,
 )
+from .pretraining import (
+    build_tiny_bert_mlm,
+    pretrain_tiny_bert_mlm,
+    evaluate_mlm_loss,
+)
 
 __all__ = [
     "BertBatchOutput",
@@ -83,6 +89,7 @@ __all__ = [
     "print_before_after_comparison",
     "load_sst2_text_splits",
     "load_wic_splits",
+    "load_wikitext_103_texts",
     "context_words_for_text",
     "mean_random_pairwise_cosine",
     "anisotropy_before_after_clipping",
@@ -108,4 +115,7 @@ __all__ = [
     "print_token_outlier_summary",
     "contextual_word_vector",
     "evaluate_wic_with_threshold",
+    "build_tiny_bert_mlm",
+    "pretrain_tiny_bert_mlm",
+    "evaluate_mlm_loss",
 ]

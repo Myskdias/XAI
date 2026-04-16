@@ -130,3 +130,30 @@ def load_wic_splits(
     val_rows = _pick("validation", max_val)
     test_rows = _pick("test", max_test)
     return _rows_to_examples(train_rows), _rows_to_examples(val_rows), _rows_to_examples(test_rows)
+
+
+def load_wikitext_103_texts(
+    split: str = "train",
+    max_texts: Optional[int] = None,
+    seed: int = 42,
+    min_chars: int = 5,
+) -> List[str]:
+    """Load WikiText-103 raw texts (filtered from empty/very short lines)."""
+    try:
+        datasets_module = importlib.import_module("datasets")
+        load_dataset = getattr(datasets_module, "load_dataset")
+    except (ImportError, AttributeError) as exc:
+        raise ImportError("The 'datasets' package is required. Install with: pip install datasets") from exc
+
+    ds = load_dataset("wikitext", "wikitext-103-raw-v1", split=split).shuffle(seed=seed)
+    texts: List[str] = []
+
+    for row in ds:
+        text = row["text"].strip()
+        if len(text) < min_chars:
+            continue
+        texts.append(text)
+        if max_texts is not None and len(texts) >= max_texts:
+            break
+
+    return texts
