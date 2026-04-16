@@ -33,7 +33,7 @@ def pretrain_tiny_bert_mlm(
     max_length: int = 64,
     batch_size: int = 16,
     lr: float = 5e-5,
-    num_steps: int = 50,
+    num_steps: int = 100,
     mlm_probability: float = 0.15,
     device: Optional[str] = None,
 ) -> Dict[str, object]:
