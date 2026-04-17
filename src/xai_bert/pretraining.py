@@ -14,6 +14,9 @@ def build_tiny_bert_mlm(
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForMaskedLM.from_pretrained(model_name, output_hidden_states=True)
 
+    # reset parameters
+    model.init_weights()
+
     pos_emb = model.bert.embeddings.position_embeddings
     if use_positional_embeddings:
         pos_emb.weight.requires_grad = True
